@@ -7,3 +7,13 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+# Create users
+User.create(email: 'user1@example.com', password: 'password')
+User.create(email: 'user2@example.com', password: 'password')
+
+# Create events associated with users
+User.all.each do |user|
+  user.created_events.create(name: 'Event 1', location: 'Location 1', date: Time.now)
+  user.created_events.create(name: 'Event 2', location: 'Location 2', date: Time.now + 1.day)
+end
