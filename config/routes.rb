@@ -1,10 +1,15 @@
 Rails.application.routes.draw do
+  get '/user/:id', to: 'users#profile', as: :user
+  resources :users, only: :index
+  root 'events#index'
+  resources :events do
+    member do
+      get 'rsvp'
+      get 'cancel_rsvp'
+    end
+  end
   devise_for :users
 
-  root to: "events#index"
-  resources :events, only: [:index, :show, :new, :create, :edit, :update]
-  resources :users, only: [:show]
-  resources :event_attendances, only: [:create, :destroy]
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

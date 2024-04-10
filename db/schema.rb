@@ -10,24 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_09_014745) do
-  create_table "event_attendances", force: :cascade do |t|
+ActiveRecord::Schema[7.1].define(version: 2024_04_10_163434) do
+  create_table "events", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.datetime "date_time"
+    t.string "location"
+    t.integer "creator_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["creator_id"], name: "index_events_on_creator_id"
+  end
+
+  create_table "rsvps", force: :cascade do |t|
     t.integer "attendee_id", null: false
     t.integer "attended_event_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["attended_event_id"], name: "index_event_attendances_on_attended_event_id"
-    t.index ["attendee_id"], name: "index_event_attendances_on_attendee_id"
-  end
-
-  create_table "events", force: :cascade do |t|
-    t.string "name"
-    t.string "location"
-    t.datetime "date"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "creator_id", null: false
-    t.index ["creator_id"], name: "index_events_on_creator_id"
+    t.index ["attended_event_id"], name: "index_rsvps_on_attended_event_id"
+    t.index ["attendee_id"], name: "index_rsvps_on_attendee_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -36,13 +37,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_09_014745) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
+    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "event_attendances", "attended_events"
-  add_foreign_key "event_attendances", "attendees"
   add_foreign_key "events", "users", column: "creator_id"
+  add_foreign_key "rsvps", "events", column: "attended_event_id"
+  add_foreign_key "rsvps", "users", column: "attendee_id"
 end

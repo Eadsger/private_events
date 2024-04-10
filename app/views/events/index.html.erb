@@ -1,9 +1,39 @@
-<h1>All Events</h1>
+<div>
+  <div>
+    <h1>Upcoming Events</h1>
+  </div>
+  <div>
+    <%= link_to 'Create Event', new_event_path %>
+  </div>
+</div>
 
-<ul>
-  <% @events.each do |event| %>
-    <li>
-      <%= link_to event.name, event %> - <%= event.location %> - <%= event.date %>
-    </li>
+<div>
+  <% Event.future.each do |event| %>
+  <div>
+      <div>
+        <div>
+          <h4><%= event.title.titleize %></h4>
+          <p><%= event.date_time.strftime("%B %-d, %Y") %></p>
+          <p><%= event.description.truncate(100) %></p>
+          <%= link_to 'Learn More', event_path(event) %>
+        </div>
+      </div>
+    </div>
   <% end %>
-</ul>
+</div>
+
+<p>PAST EVENTS</p>
+<div>
+  <% Event.past.each do |event| %>
+  <div>
+      <div>
+        <div>
+          <h5><%= event.title.titleize %></h5>
+          <p><%= event.date_time.strftime("%B %-d, %Y") %></p>
+          <p><%= event.description.truncate(50) %></p>
+          <%= link_to 'Learn More', event_path(event) %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,20 @@
+<h1> <%= @user.name %> </h1>
+
+<div>
+  <div>
+    <p> <%= pluralize(@user.created_events.count, 'event').upcase %> CREATED</p>
+    <div>
+        <% @user.created_events.each do |event| %>
+          <%= link_to event.title, event_path(event) %>
+        <% end %>
+    </div>
+  </div>
+  <div>
+    <p> <%= pluralize(@user.attended_events.count, 'event').upcase %> ATTENDED</p>
+    <div>
+        <% @user.attended_events.each do |event| %>
+          <%= link_to event.title, event_path(event) %>
+        <% end %>
+    </div>
+  </div>
+</div>

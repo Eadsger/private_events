@@ -8,12 +8,50 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-# Create users
-User.create(email: 'user1@example.com', password: 'password')
-User.create(email: 'user2@example.com', password: 'password')
+# Clear existing data
+User.destroy_all
+Event.destroy_all
 
-# Create events associated with users
-User.all.each do |user|
-  user.created_events.create(name: 'Event 1', location: 'Location 1', date: Time.now)
-  user.created_events.create(name: 'Event 2', location: 'Location 2', date: Time.now + 1.day)
+# Create users
+users = []
+10.times do
+  name = Faker::Name.unique.name
+  email = Faker::Internet.unique.email
+  password = Faker::Internet.password(min_length: 8)
+
+  users << User.create!(
+    name: name,
+    email: email,
+    password: password
+  )
+
+  puts "User created: #{email} - #{password}"
+end
+
+# Create events with RSVPs
+users.each do |user|
+  3.times do
+    title = Faker::Lorem.sentence
+    description = Faker::Lorem.paragraph
+    date_time = Faker::Time.between(from: DateTime.now, to: DateTime.now + 30, format: :default)
+    location = Faker::Address.full_address
+
+    event = user.created_events.create!(
+      title: title,
+      description: description,
+      date_time: date_time,
+      location: location
+    )
+
+    puts "Event created: #{event.title} at #{event.location} on #{event.date_time}"
+
+    # Generate RSVPs for each event
+    event_attendees = users.sample(rand(1..users.length))
+    event_attendees.each do |attendee|
+      unless attendee == user || event.attendees.include?(attendee)
+        event.attendees << attendee
+        puts "RSVP created: #{attendee.email} attending #{event.title}"
+      end
+    end
+  end
 end

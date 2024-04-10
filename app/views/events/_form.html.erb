@@ -1,0 +1,22 @@
+<%= form_with model: @event, local: true do |f| %>
+  <% if @event.errors.any? %>
+    <ul>
+      <% @event.errors.full_messages.each do |error| %>
+        <li> <%= error %> </li>
+      <% end %>
+    </ul>
+  <% end %>
+  <div>
+    <%= f.text_field :title, placeholder: "Event title"  %>
+  </div>
+  <div>
+    <%= f.text_area :description, placeholder: "Event description"  %>
+  </div>
+  <div>
+    <%= f.text_field :location, placeholder: "Event location"  %>
+  </div>
+  <div>
+    <%= f.datetime_field :date_time  %>
+  </div>
+  <%= f.submit %>
+<% end %>

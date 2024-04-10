@@ -1,6 +1,9 @@
 class UsersController < ApplicationController
-  def show
+  def profile
     @user = User.find(params[:id])
-    @created_events = @user.created_events
+  end
+
+  def index
+    @users = User.all
   end
 end

@@ -1,12 +1,12 @@
 class EventsController < ApplicationController
-  before_action :authenticate_user!, only: [:new, :create, :edit, :update]
+  before_action :authenticate_user!, except: [:index, :show]
 
   def index
     @events = Event.all
   end
 
   def new
-    @event = current_user.created_events.build
+    @event = Event.new
   end
 
   def create
@@ -16,6 +16,10 @@ class EventsController < ApplicationController
     else
       render :new
     end
+  end
+
+  def show
+    @event = Event.find(params[:id])
   end
 
   def edit
@@ -31,13 +35,31 @@ class EventsController < ApplicationController
     end
   end
 
-  def show
+  def destroy
     @event = Event.find(params[:id])
+    @event.destroy
+    redirect_to events_path
+  end
+
+  def rsvp
+    @event = Event.find(params[:id])
+    if @event.attendees.include?(current_user)
+      redirect_to @event, notice: "You are already on the list"
+    else
+      @event.attendees << current_user
+      redirect_to @event
+    end
+  end
+
+  def cancel_rsvp
+    @event = Event.find(params[:id])
+    @event.attendees.delete(current_user)
+    redirect_to @event, notice: "You are no longer attending this event"
   end
 
   private
 
-  def event_params
-    params.require(:event).permit(:name, :location, :date)
-  end
+    def event_params
+      params.require(:event).permit(:title, :description, :date_time, :location)
+    end
 end
